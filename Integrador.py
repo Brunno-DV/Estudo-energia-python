@@ -14,6 +14,7 @@ import time
 import os
 import webbrowser
 
+
 def main():
     tela()
 
@@ -51,24 +52,29 @@ def tela():
         if controle == 1 and chave != 0:
             botoes_controle()
 
-    bt_login = Button(master, bd=0, image=img_botao_login, command=captura_usuario)
+    bt_login = Button(master, bd=0, image=img_botao_login,
+                      command=captura_usuario)
     bt_login.place(width=180, height=60, x=155, y=150)
 
-    bt_finish = Button(master, bd=0, image=img_botao_finish, command=master.destroy)
+    bt_finish = Button(master, bd=0, image=img_botao_finish,
+                       command=master.destroy)
     bt_finish.place(width=180, height=60, x=155, y=470)
 
     def botoes_controle():
-        bt_open_dwg = Button(master, bd=0, image=img_botao_open_dwg, command=open_cad)
+        bt_open_dwg = Button(
+            master, bd=0, image=img_botao_open_dwg, command=open_cad)
         bt_open_dwg.place(width=180, height=60, x=155, y=250)
 
-        bt_exp_dwg = Button(master, bd=0, image=img_botao_exp_dwg, command=edita_cad)
+        bt_exp_dwg = Button(
+            master, bd=0, image=img_botao_exp_dwg, command=edita_cad)
         bt_exp_dwg.place(width=180, height=60, x=155, y=360)
 
     master.mainloop()
 
+
 def pick_key():
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-    SAMPLE_SPREADSHEET_ID = '1YGq2grzVuYEmwJMNRUuGnvRhxQeD3j9ac4Ieet4lsIo'
+    SAMPLE_SPREADSHEET_ID = '1ByfEq3lOH43RpIMofWEo_lL-bsizvKf0nUjSR2Uo2RM'
     SAMPLE_RANGE_NAME_1 = 'ENERGIA-INCIDENTE!A3:C30'
 
     creds = None
@@ -89,7 +95,7 @@ def pick_key():
         # Para ler os valores da sheets
         sheet = service.spreadsheets()
         result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                      range=SAMPLE_RANGE_NAME_1).execute()
+                                    range=SAMPLE_RANGE_NAME_1).execute()
         chave_acesso = result.get('values')
 
         cont = 0
@@ -136,12 +142,12 @@ def int_Google():
         # Para ler os valores da sheets
         sheet = service.spreadsheets()
         result_1 = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                    range=SAMPLE_RANGE_NAME_1).execute()
+                                      range=SAMPLE_RANGE_NAME_1).execute()
         lista_1 = result_1.get('values', [])
 
         sheet = service.spreadsheets()
         result_2 = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                    range=SAMPLE_RANGE_NAME_2).execute()
+                                      range=SAMPLE_RANGE_NAME_2).execute()
         lista_2 = result_2.get('values', [])
 
         sheet = service.spreadsheets()
@@ -183,7 +189,7 @@ def edita_cad():
     flag = 0
     cwd = os.getcwd()
 
-    #checa se CAD está aberto
+    # checa se CAD está aberto
 
     for process in f.Win32_Process():
         if "ZWCAD.exe" == process.Name:
@@ -191,22 +197,25 @@ def edita_cad():
                 flag = 1
 
     if flag == 0:
-        messagebox.showinfo('AVISO','Aperte OK para abrir o arquivo ZWCAD')
+        messagebox.showinfo('AVISO', 'Aperte OK para abrir o arquivo ZWCAD')
         open_cad()
 
-    confirm = messagebox.askquestion('ALERTA','Tem certeza que deseja apagar os dados atuais do CAD?')
+    confirm = messagebox.askquestion(
+        'ALERTA', 'Tem certeza que deseja apagar os dados atuais do CAD?')
 
     if confirm == 'no':
         pass
     elif confirm == 'yes':
-        acadModel = acad.ActiveDocument.ModelSpace     ### APAGA CAD ###
+        acadModel = acad.ActiveDocument.ModelSpace  # APAGA CAD ###
         for object in acadModel:
             object.Delete()
 
-        acad.model.insertBlock(APoint(p0), "PADRAO_ENERGIA_INCIDENTE2", 1, 1, 1, 0)  # Insere bloco
+        acad.model.insertBlock(
+            APoint(p0), "PADRAO_ENERGIA_INCIDENTE2", 1, 1, 1, 0)  # Insere bloco
 
         for info, insercao in zip(lista_plan, pontos):
-            texto = acad.model.AddMText(insercao, width, info.pop(1))  # Escreve texto
+            texto = acad.model.AddMText(
+                insercao, width, info.pop(1))  # Escreve texto
             texto.Height = heigth_1
             texto.AttachmentPoint = justify_1
             cont += 1
@@ -216,14 +225,17 @@ def edita_cad():
 
     acad.app.Update()
 
-    #acad.app.Quit() #Para fechar CAD
+    # acad.app.Quit() #Para fechar CAD
+
 
 def open_cad():
-        cwd = os.getcwd()
+    cwd = os.getcwd()
 
-        # Abre o arquivo ZWCAD
-        os.startfile(cwd + "/arq_padrao_energia_incidente.dwg")
-        time.sleep(6.0) # inserir uma pausa para dar tempo da arquivo ser aberto (ajuste o tempo se necessario)
+    # Abre o arquivo ZWCAD
+    os.startfile(cwd + "/arq_padrao_energia_incidente.dwg")
+    # inserir uma pausa para dar tempo da arquivo ser aberto (ajuste o tempo se necessario)
+    time.sleep(6.0)
+
 
 if __name__ == '__main__':
     main()
