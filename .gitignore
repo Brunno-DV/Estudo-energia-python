@@ -1,3 +1,6 @@
 token.json
 client_secret.json
 .venv/
+dist/
+build/
+*.spec
