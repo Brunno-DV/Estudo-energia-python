@@ -91,7 +91,11 @@ def pick_key():
             token.write(creds.to_json())
 
     try:
-        service = build('sheets', 'v4', credentials=creds)
+        DISCOVERY_SERVICE_URL = 'https://sheets.googleapis.com/$discovery/rest?version=v4'
+        service = build(
+            'sheets', 'v4', credentials=creds,
+            discoveryServiceUrl=DISCOVERY_SERVICE_URL
+        )
         # Para ler os valores da sheets
         sheet = service.spreadsheets()
         result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
@@ -138,7 +142,11 @@ def int_Google():
             token.write(creds.to_json())
 
     try:
-        service = build('sheets', 'v4', credentials=creds)
+        DISCOVERY_SERVICE_URL = 'https://sheets.googleapis.com/$discovery/rest?version=v4'
+        service = build(
+            'sheets', 'v4', credentials=creds,
+            discoveryServiceUrl=DISCOVERY_SERVICE_URL
+        )
         # Para ler os valores da sheets
         sheet = service.spreadsheets()
         result_1 = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
