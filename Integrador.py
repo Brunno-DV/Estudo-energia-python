@@ -39,7 +39,7 @@ def tela():
 
     # caixas de entrada de usuario
     en_user = Entry(master, bd=2, font=("Calibri", 12), justify=CENTER)
-    en_user.place(width=50, height=30, x=270, y=109)
+    en_user.place(width=60, height=30, x=270, y=109)
 
     def captura_usuario():
         global user
@@ -75,7 +75,7 @@ def tela():
 def pick_key():
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
     SAMPLE_SPREADSHEET_ID = '1ByfEq3lOH43RpIMofWEo_lL-bsizvKf0nUjSR2Uo2RM'
-    SAMPLE_RANGE_NAME_1 = 'ENERGIA-INCIDENTE!A3:C30'
+    SAMPLE_RANGE_NAME_1 = 'ENERGIA-INCIDENTE!A3:B30'
 
     creds = None
     if os.path.exists('token.json'):
@@ -105,14 +105,14 @@ def pick_key():
         cont = 0
         for user_google in chave_acesso:
             aux_user = str(user_google.pop(0)).strip('[]')
-            link_plan = str(user_google.pop(1)).strip('[]')
+            link_plan = str(user_google.pop(0)).strip('[]')
             cont += 1
             if user == aux_user:
-                chave_acesso = str(chave_acesso.pop(0)).strip('[]')
+                chave_acesso = link_plan[39:83]
                 webbrowser.open(link_plan)
                 return chave_acesso
             elif cont == len(chave_acesso):
-                messagebox.showinfo('AVISO', 'Usuário não encontrado!')
+                messagebox.showerror('AVISO', 'Usuário não encontrado!')
                 return 0
 
     except HttpError as err:
