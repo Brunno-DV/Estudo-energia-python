@@ -1,18 +1,19 @@
 from __future__ import print_function
+
+import os
 import os.path
+import time
+import webbrowser
+from tkinter import *
+from tkinter import messagebox
+
+import wmi
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from pyzwcad import ZwCAD, APoint
-from tkinter import *
-from tkinter import messagebox
-import wmi
-import os.path
-import time
-import os
-import webbrowser
+from pyzwcad import APoint, ZwCAD
 
 
 def main():
@@ -91,32 +92,30 @@ def pick_key():
             token.write(creds.to_json())
 
     try:
+        service = build('sheets', 'v4', credentials=creds)
+    except:
         DISCOVERY_SERVICE_URL = 'https://sheets.googleapis.com/$discovery/rest?version=v4'
         service = build(
             'sheets', 'v4', credentials=creds,
             discoveryServiceUrl=DISCOVERY_SERVICE_URL
         )
-        # Para ler os valores da sheets
-        sheet = service.spreadsheets()
-        result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                    range=SAMPLE_RANGE_NAME_1).execute()
-        chave_acesso = result.get('values')
+    # Para ler os valores da sheets
+    sheet = service.spreadsheets()
+    result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+                                range=SAMPLE_RANGE_NAME_1).execute()
+    chave_acesso = result.get('values')
 
-        cont = 0
-        for user_google in chave_acesso:
-            aux_user = str(user_google.pop(0)).strip('[]')
-            link_plan = str(user_google.pop(0)).strip('[]')
-            cont += 1
-            if user == aux_user:
-                chave_acesso = link_plan[39:83]
-                webbrowser.open(link_plan)
-                return chave_acesso
-            elif cont == len(chave_acesso):
-                messagebox.showerror('AVISO', 'Usuário não encontrado!')
-                return 0
-
-    except HttpError as err:
-        print(err)
+    cont = 0
+    for user_google in chave_acesso:
+        aux_user = str(user_google.pop(0)).strip('[]')
+        link_plan = str(user_google.pop(0)).strip('[]')
+        cont += 1
+        if user == aux_user:
+            chave_acesso = link_plan[39:83]
+            webbrowser.open(link_plan)
+            return chave_acesso
+        messagebox.showerror('AVISO', 'Usuário não encontrado!')
+        return 0
 
 
 def int_Google():
